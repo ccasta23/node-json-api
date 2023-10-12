@@ -1,4 +1,5 @@
 // Librerías externas
+require('dotenv').config()
 const express = require('express');
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
@@ -7,11 +8,17 @@ const { v4: uuidv4 } = require('uuid');
 const { readFile, writeFile } = require('./src/files');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+const APP_NAME = process.env.APP_NAME || 'My App';
 const FILE_NAME = './db/pets.txt';
 
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+//Usar el motor de plantillas de EJS
+app.set('views', './src/views');
+app.set('view engine', 'ejs');
 
 //Rutas DE PRUEBA
 app.get('/hola/:name', (req, res) => {
@@ -19,8 +26,13 @@ app.get('/hola/:name', (req, res) => {
     const name = req.params.name;
     const type = req.query.type;
     const formal = req.query.formal;
-    res.send(`Hello ${formal ? 'Mr.' : ''} 
-    ${name} ${type ? ' ' + type : ''}`);
+    const students_list = ['Juan', 'Pedro', 'María', 'José'];
+    //res.send(`Hello ${formal ? 'Mr.' : ''} 
+    //${name} ${type ? ' ' + type : ''}`);
+    res.render('index', {
+        name: name,
+        students: students_list,
+    }) //Enviar datos a la vista
 });
 
 app.get('/read-file', (req, res) => {
@@ -28,15 +40,22 @@ app.get('/read-file', (req, res) => {
     res.send(data);
 });
 
-// API
+//WEB
 // Listar Mascotas
 app.get('/pets', (req, res)=>{
+    const data = readFile(FILE_NAME);
+    res.render('pets/index', { pets: data });
+})
+
+// API
+// Listar Mascotas
+app.get('/api/pets', (req, res)=>{
     const data = readFile(FILE_NAME);
     res.json(data);
 })
 
 //Crear Mascota
-app.post('/pets', (req, res) => {
+app.post('/api/pets', (req, res) => {
     try {
         //Leer el archivo de mascotas
         const data = readFile(FILE_NAME);
@@ -55,7 +74,7 @@ app.post('/pets', (req, res) => {
 });
 
 //Obtener una sola mascota
-app.get('/pets/:id', (req, res) => {
+app.get('/api/pets/:id', (req, res) => {
     console.log(req.params.id);
     //Guardar el ID
     const id = req.params.id
@@ -71,7 +90,7 @@ app.get('/pets/:id', (req, res) => {
 })
 
 //Actualizar una mascota
-app.put('/pets/:id', (req, res) => {
+app.put('/api/pets/:id', (req, res) => {
     console.log(req.params.id);
     //Guardar el ID
     const id = req.params.id
@@ -92,7 +111,7 @@ app.put('/pets/:id', (req, res) => {
 })
 
 //Eliminar una mascota
-app.delete('/pets/:id', (req, res) => {
+app.delete('/api/pets/:id', (req, res) => {
     console.log(req.params.id);
     //Guardar el ID
     const id = req.params.id
@@ -110,6 +129,6 @@ app.delete('/pets/:id', (req, res) => {
     res.json({'ok': true});
 })
 
-app.listen(3000, () => {
-    console.log(`Server is running on http://localhost:3000`)
+app.listen(PORT, () => {
+    console.log(`${APP_NAME} is running on http://localhost:${PORT}`);
 });

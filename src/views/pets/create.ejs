@@ -1,0 +1,46 @@
+<%- include('../layouts/header', {title: 'Create a new pet'}); -%>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="alert alert-success text-center">Create a new Pet</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form action="/pets" method="post" class="row">
+                    <div class="col-6">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" name="name" id="name" class="form-control" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" name="age" id="age" class="form-control" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="breed" class="form-label">Breed</label>
+                        <input type="text" name="breed" id="breed" class="form-control" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="type" class="form-label">Type</label>
+                        <select name="type" id="type" class="form-select" required>
+                            <option value="Dog">Dog 🐶</option>
+                            <option value="Cat">Cat 🐱</option>
+                        </select>
+                    </div>
+                    <div class="col-12 d-grid mt-4">
+                        <button type="submit" class="btn btn-outline-success">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-grid mt-4">
+                <a href="/pets" class="btn btn-outline-secondary">
+                    Back to Pets list
+                </a>
+            </div>
+        </div>
+    </div>
+
+<%- include('../layouts/footer'); -%>

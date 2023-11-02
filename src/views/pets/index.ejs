@@ -7,6 +7,19 @@
             </div>
         </div>
         <div class="row">
+            <form class="row g-3 align-items-center my-3" action="/pets" method="get">
+                <div class="col-auto">
+                    <label for="search" class="col-form-label">Search</label>
+                </div>
+                <div class="col-auto">
+                    <input type="text" id="search" name="search" class="form-control" value="<%=search%>">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="row">
             <div class="col-12">
                 <table class="table table-bordered table-striped">
                     <thead>

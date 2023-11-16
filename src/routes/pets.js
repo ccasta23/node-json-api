@@ -8,12 +8,20 @@ const {models} = require('../libs/sequelize');
 
 const FILE_NAME = './db/pets.txt';
 
+router.use((req, res, next) => {
+    if(req.user) {
+        next();
+    }
+    else {
+        res.redirect('/auth/signin');
+    }
+});
 
 //WEB
 // Listar Mascotas
 router.get('/', async (req, res)=>{
     // let pets = readFile(FILE_NAME);
-
+    console.log(req.user)
     const {search} = req.query;
 
     // if(search){

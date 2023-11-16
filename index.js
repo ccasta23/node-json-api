@@ -6,6 +6,7 @@ const express = require('express');
 const { readFile } = require('./src/files');
 const pets = require('./src/routes/pets');
 const pets_api = require('./src/routes/pets_api');
+const authRouter = require('./src/routes/users.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,10 +16,19 @@ const FILE_NAME = './db/pets.txt';
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'ingenieria informatica', resave: true, saveUninitialized: true }));
+require('./src/config/passport')(app);
 
 //Usar el motor de plantillas de EJS
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
+
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+})
 
 //Rutas DE PRUEBA
 app.get('/hola/:name', (req, res) => {
@@ -43,6 +53,8 @@ app.get('/read-file', (req, res) => {
 app.use('/pets', pets);
 
 app.use('/api/pets', pets_api);
+
+app.use('/auth', authRouter);
 
 app.listen(PORT, () => {
     console.log(`${APP_NAME} is running on http://localhost:${PORT}`);
